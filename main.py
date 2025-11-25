@@ -19,8 +19,7 @@ def bfs_shortest_path(graph, start, goal):
         for neighbor in graph.get(node, []):
             if neighbor not in visited:
                 visited.add(neighbor)
-                new_path = list(path)
-                new_path.append(neighbor)
+                new_path = path + [neighbor]
                 queue.append(new_path)
 
     return []
