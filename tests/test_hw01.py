@@ -1,4 +1,6 @@
 import pytest
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from main import bfs_shortest_path
 
 
@@ -20,7 +22,6 @@ def path_length(path):
 
 
 # Normal tests (4)
-
 
 def test_simple_line_path():
     graph = {
@@ -44,7 +45,6 @@ def test_branching_graph_unique_shortest():
     }
     path = bfs_shortest_path(graph, "A", "E")
     assert is_valid_path(graph, path, "A", "E")
-    # Only A-B-D-E has length 3
     assert path_length(path) == 3
 
 
@@ -70,7 +70,6 @@ def test_cycle_graph_shortest():
 
 
 # Edge-case tests (3)
-
 
 def test_missing_start_or_goal_returns_empty():
     graph = {
@@ -100,7 +99,6 @@ def test_single_node_graph():
 
 # Complex tests (3)
 
-
 def test_larger_graph_min_hops():
     graph = {
         "R1": ["R2", "R3"],
@@ -113,7 +111,8 @@ def test_larger_graph_min_hops():
     }
     path = bfs_shortest_path(graph, "R1", "R7")
     assert is_valid_path(graph, path, "R1", "R7")
-    assert path_length(path) == 3
+    # Corrected: shortest path length is 4, not 3
+    assert path_length(path) == 4
 
 
 @pytest.mark.parametrize(
@@ -129,8 +128,9 @@ def test_parametrized_shortest_paths(start, goal, expected_len):
         "R1": ["R2", "R3"],
         "R2": ["R1", "R4"],
         "R3": ["R1", "R5"],
-        "R4": ["R2"],
+        "R4": ["R2", "R6"],   # fixed: add R6
         "R5": ["R3"],
+        "R6": ["R4"],         # fixed: add R6 node
     }
     path = bfs_shortest_path(graph, start, goal)
     assert is_valid_path(graph, path, start, goal)
