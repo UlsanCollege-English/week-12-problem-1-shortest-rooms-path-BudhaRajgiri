@@ -1,30 +1,26 @@
 from collections import deque
 
 def bfs_shortest_path(graph, start, goal):
-    """
-    Find the shortest path between start and goal in an unweighted graph using BFS.
-    Returns [] if no path exists.
-    """
     if start not in graph or goal not in graph:
         return []
-
     if start == goal:
         return [start]
 
-    queue = deque([(start, [start])])
-    visited = set()
+    queue = deque([[start]])
+    visited = set([start])
 
     while queue:
-        current, path = queue.popleft()
+        path = queue.popleft()
+        node = path[-1]
 
-        if current in visited:
-            continue
-        visited.add(current)
+        if node == goal:
+            return path
 
-        for neighbor in graph.get(current, []):
-            new_path = path + [neighbor]
-            if neighbor == goal:
-                return new_path
-            queue.append((neighbor, new_path))
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
 
     return []
